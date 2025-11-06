@@ -73,8 +73,8 @@ export default function Index() {
     let timer: NodeJS.Timeout;
     if (isWorkoutActive && timeLeft > 0) {
       timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && isWorkoutActive) {
-      if (currentExerciseIndex < (selectedWorkout?.exercises.length || 0) - 1) {
+    } else if (timeLeft === 0 && isWorkoutActive && selectedWorkout) {
+      if (currentExerciseIndex < selectedWorkout.exercises.length - 1) {
         setCurrentExerciseIndex(currentExerciseIndex + 1);
         setTimeLeft(60);
       } else {
@@ -133,6 +133,14 @@ export default function Index() {
             <div className={`h-2 bg-gradient-to-r ${selectedWorkout.gradient}`} />
             <CardContent className="p-8 space-y-6">
               <div className="text-center space-y-4">
+                <div className="w-full aspect-video rounded-xl overflow-hidden bg-muted mb-4">
+                  <img 
+                    src={`https://cdn.poehali.dev/projects/f587d6c1-af1b-47b4-91a8-637ff1a9f4ce/files/${currentExerciseIndex % 3 === 0 ? '78123bc6-4abb-4809-a14a-89a09ab83fc7' : currentExerciseIndex % 3 === 1 ? 'aa368413-e8d8-4198-844e-a9f513ed9540' : 'c09acdce-fe84-4278-bb0e-4976074ac1c8'}.jpg`}
+                    alt={selectedWorkout.exercises[currentExerciseIndex]}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
                 <div className="w-32 h-32 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
                   <span className="text-6xl font-bold text-primary">{formatTime(timeLeft)}</span>
                 </div>
@@ -145,19 +153,19 @@ export default function Index() {
                 <Progress value={progress} className="h-2" />
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3">
                 {isWorkoutActive ? (
-                  <Button onClick={pauseWorkout} className="flex-1" size="lg">
+                  <Button onClick={pauseWorkout} className="w-full" size="lg">
                     <Icon name="Pause" size={20} className="mr-2" />
                     Пауза
                   </Button>
                 ) : (
-                  <Button onClick={resumeWorkout} className="flex-1" size="lg">
+                  <Button onClick={resumeWorkout} className="w-full" size="lg">
                     <Icon name="Play" size={20} className="mr-2" />
                     Продолжить
                   </Button>
                 )}
-                <Button onClick={stopWorkout} variant="outline" size="lg">
+                <Button onClick={stopWorkout} variant="outline" className="w-full" size="lg">
                   Завершить
                 </Button>
               </div>
