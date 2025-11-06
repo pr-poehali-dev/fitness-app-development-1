@@ -109,6 +109,20 @@ export default function Index() {
     setTimeLeft(0);
   };
 
+  const nextExercise = () => {
+    if (selectedWorkout && currentExerciseIndex < selectedWorkout.exercises.length - 1) {
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+      setTimeLeft(60);
+    }
+  };
+
+  const previousExercise = () => {
+    if (currentExerciseIndex > 0) {
+      setCurrentExerciseIndex(currentExerciseIndex - 1);
+      setTimeLeft(60);
+    }
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -153,18 +167,38 @@ export default function Index() {
                 <Progress value={progress} className="h-2" />
               </div>
 
-              <div className="flex flex-col gap-3">
-                {isWorkoutActive ? (
-                  <Button onClick={pauseWorkout} className="w-full" size="lg">
-                    <Icon name="Pause" size={20} className="mr-2" />
-                    Пауза
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <Button 
+                    onClick={previousExercise} 
+                    variant="outline" 
+                    size="lg"
+                    disabled={currentExerciseIndex === 0}
+                    className="flex-1"
+                  >
+                    <Icon name="ChevronLeft" size={20} />
                   </Button>
-                ) : (
-                  <Button onClick={resumeWorkout} className="w-full" size="lg">
-                    <Icon name="Play" size={20} className="mr-2" />
-                    Продолжить
+                  {isWorkoutActive ? (
+                    <Button onClick={pauseWorkout} className="flex-1" size="lg">
+                      <Icon name="Pause" size={20} className="mr-2" />
+                      Пауза
+                    </Button>
+                  ) : (
+                    <Button onClick={resumeWorkout} className="flex-1" size="lg">
+                      <Icon name="Play" size={20} className="mr-2" />
+                      Продолжить
+                    </Button>
+                  )}
+                  <Button 
+                    onClick={nextExercise} 
+                    variant="outline" 
+                    size="lg"
+                    disabled={selectedWorkout ? currentExerciseIndex === selectedWorkout.exercises.length - 1 : true}
+                    className="flex-1"
+                  >
+                    <Icon name="ChevronRight" size={20} />
                   </Button>
-                )}
+                </div>
                 <Button onClick={stopWorkout} variant="outline" className="w-full" size="lg">
                   Завершить
                 </Button>
